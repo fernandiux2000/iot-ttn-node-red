@@ -45,6 +45,7 @@ flujos-node-red.json → Exportación completa de los flujos de Node-RED para si
 1️⃣ Clonar el repositorio:
 
 git clone https://github.com/TU_USUARIO/iot-ttn-node-red.git
+
 cd iot-ttn-node-red
 
 2️⃣ Crear la base de datos y usuario MySQL manualmente
