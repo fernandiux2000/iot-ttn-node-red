@@ -96,7 +96,8 @@ Registrarse gratuitamente en https://openweathermap.org/api para obtener una cla
 
 Dentro de Node-RED, editar el nodo Preparar solicitud HTTP (en el flujo Datos Clima API) y colocar su clave en el campo appid= de la URL.
 
-🗄 Modelo de la base de datos
+🗄 Modelo de la base de datos:
+
 Se utiliza una única tabla sensor_data:
 
 id	Clave primaria (autoincremental)
