@@ -1,0 +1,284 @@
+[
+    {
+        "id": "5fb56c1cc5fd321b",
+        "type": "tab",
+        "label": "Datos Clima Simulado",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "af47cbdfd2195e3e",
+        "type": "comment",
+        "z": "5fb56c1cc5fd321b",
+        "name": "WARNING: please check you have started this container with a volume that is mounted to /data\\n otherwise any flow changes are lost when you redeploy or upgrade the container\\n (e.g. upgrade to a more recent node-red docker image).\\n  If you are using named volumes you can ignore this warning.\\n Double click or see info side panel to learn how to start Node-RED in Docker to save your work",
+        "info": "\nTo start docker with a bind mount volume (-v option), for example:\n\n```\ndocker run -it -p 1880:1880 -v /home/user/node_red_data:/data --name mynodered nodered/node-red\n```\n\nwhere `/home/user/node_red_data` is a directory on your host machine where you want to store your flows.\n\nIf you do not do this then you can experiment and redploy flows, but if you restart or upgrade the container the flows will be disconnected and lost. \n\nThey will still exist in a hidden data volume, which can be recovered using standard docker techniques, but that is much more complex than just starting with a named volume as described above.",
+        "x": 350,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "3605da0a8e9b0b1b",
+        "type": "function",
+        "z": "5fb56c1cc5fd321b",
+        "name": "Generar SQL INSERT",
+        "func": "const temp = msg.payload.temperature;\nconst hum = msg.payload.humidity;\nconst dev_id = \"simulado\"; // identificador de este tipo de datos\nconst sql = `INSERT INTO sensor_data (dev_id, temperature, humidity, timestamp)\n             VALUES ('${dev_id}', ${temp}, ${hum}, NOW())`;\nmsg.topic = sql;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 620,
+        "y": 200,
+        "wires": [
+            [
+                "741f3a65aaf06724"
+            ]
+        ]
+    },
+    {
+        "id": "929475832091d63f",
+        "type": "debug",
+        "z": "5fb56c1cc5fd321b",
+        "name": "Resultado en consola",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 620,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "741f3a65aaf06724",
+        "type": "mysql",
+        "z": "5fb56c1cc5fd321b",
+        "mydb": "d0b8d994deee5013",
+        "name": "Guardar en base de datos",
+        "x": 630,
+        "y": 260,
+        "wires": [
+            [
+                "929475832091d63f"
+            ]
+        ]
+    },
+    {
+        "id": "f341ea616de03cf8",
+        "type": "ui_text",
+        "z": "5fb56c1cc5fd321b",
+        "group": "d5e68bbf0cdff559",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "text",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 130,
+        "y": 560,
+        "wires": []
+    },
+    {
+        "id": "6f9f1d1b95122e5e",
+        "type": "function",
+        "z": "5fb56c1cc5fd321b",
+        "name": "SQL último dato",
+        "func": "msg.topic = \"SELECT dev_id, temperature, humidity, timestamp FROM sensor_data WHERE dev_id = 'simulado' ORDER BY timestamp DESC LIMIT 1\";\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 420,
+        "y": 400,
+        "wires": [
+            [
+                "487562d8f93cf704"
+            ]
+        ]
+    },
+    {
+        "id": "4abb7eee1cc6759d",
+        "type": "function",
+        "z": "5fb56c1cc5fd321b",
+        "name": "Formatear salida",
+        "func": "// Que sea un array y que tenga al menos un elemento\nif (Array.isArray(msg.payload) && msg.payload.length > 0) {\n    let data = msg.payload[0];\n    msg.payload = `🌡 ${data.temperature} °C | 💧 ${data.humidity} %`;\n} else {\n    msg.payload = \"❌ Datos no disponibles\";\n}\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 630,
+        "y": 480,
+        "wires": [
+            [
+                "4814c863246f7fa5"
+            ]
+        ]
+    },
+    {
+        "id": "4814c863246f7fa5",
+        "type": "ui_text",
+        "z": "5fb56c1cc5fd321b",
+        "group": "d5e68bbf0cdff559",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Clima actual",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 650,
+        "y": 580,
+        "wires": []
+    },
+    {
+        "id": "b2d1b18b23f4619a",
+        "type": "inject",
+        "z": "5fb56c1cc5fd321b",
+        "name": "Simular datos",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "30",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 140,
+        "y": 200,
+        "wires": [
+            [
+                "d4157768787c3ee5",
+                "6f9f1d1b95122e5e"
+            ]
+        ]
+    },
+    {
+        "id": "2d4777563117356d",
+        "type": "inject",
+        "z": "5fb56c1cc5fd321b",
+        "name": "Actualizar clima simulado",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "300",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 180,
+        "y": 400,
+        "wires": [
+            [
+                "6f9f1d1b95122e5e"
+            ]
+        ]
+    },
+    {
+        "id": "34506071878ba2fb",
+        "type": "debug",
+        "z": "5fb56c1cc5fd321b",
+        "name": "debug 2",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 440,
+        "y": 580,
+        "wires": []
+    },
+    {
+        "id": "487562d8f93cf704",
+        "type": "mysql",
+        "z": "5fb56c1cc5fd321b",
+        "mydb": "d0b8d994deee5013",
+        "name": "",
+        "x": 620,
+        "y": 400,
+        "wires": [
+            [
+                "4abb7eee1cc6759d",
+                "34506071878ba2fb"
+            ]
+        ]
+    },
+    {
+        "id": "d4157768787c3ee5",
+        "type": "function",
+        "z": "5fb56c1cc5fd321b",
+        "name": "Generar datos aleatorios",
+        "func": "msg.payload = {\n    temperature: Math.floor(Math.random() * 6) + 20,  // entre 20 y 25\n    humidity: Math.floor(Math.random() * 21) + 50     // entre 50 y 70\n};\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 370,
+        "y": 200,
+        "wires": [
+            [
+                "3605da0a8e9b0b1b"
+            ]
+        ]
+    },
+    {
+        "id": "d0b8d994deee5013",
+        "type": "MySQLdatabase",
+        "name": "",
+        "host": "mysql",
+        "port": "3306",
+        "db": "lorawan_data",
+        "tz": "",
+        "charset": "UTF8"
+    },
+    {
+        "id": "d5e68bbf0cdff559",
+        "type": "ui_group",
+        "name": "Clima Simulado",
+        "tab": "648159751a798c48",
+        "order": 1,
+        "disp": true,
+        "width": 6,
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "648159751a798c48",
+        "type": "ui_tab",
+        "name": "Panel IoT",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": false
+    }
+]
