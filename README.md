@@ -1,8 +1,6 @@
 # iot-ttn-node-red
 Proyecto IoT: Monitor de Clima Simulado y Real usando Node-RED, MySQL y OpenWeather API
 
-Este proyecto fue desarrollado como parte de la Especialización en IoT (UBA), dentro de la asignatura Principios y Aplicaciones para dispositivos LoRa/LoRaWAN.
-
 🎯 Descripción general del proyecto:
 
 El proyecto implementa una solución de monitoreo de clima simulando un sistema IoT basado en tecnología LoRa/LoRaWAN, donde:
@@ -102,26 +100,12 @@ Dentro de Node-RED, editar el nodo Preparar solicitud HTTP (en el flujo Datos Cl
 Se utiliza una única tabla sensor_data:
 
 id	Clave primaria (autoincremental)
+
 dev_id	Fuente del dato (simulado o openweather)
+
 temperature	Temperatura en grados Celsius
+
 humidity	Humedad relativa (%)
+
 timestamp	Fecha y hora del registro
 
-🎓 Objetivos pedagógicos alcanzados
-Simulación de sensores LoRa.
-
-Consumo de API REST pública externa (OpenWeather).
-
-Persistencia de datos relacional en MySQL.
-
-Visualización en tiempo real mediante Dashboard de Node-RED.
-
-Contenerización completa en Docker para despliegue portable.
-
-Separación de flujos por origen de datos: simulado vs real.
-
-📚 Asignatura
-Principios y Aplicaciones para dispositivos LoRa/LoRaWAN — Especialización en IoT — Universidad de Buenos Aires
-
-👨‍🎓 Autor
-Rodrigo Morocho Román
