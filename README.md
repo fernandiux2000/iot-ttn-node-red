@@ -3,7 +3,8 @@ Proyecto IoT: Monitor de Clima Simulado y Real usando Node-RED, MySQL y OpenWeat
 
 Este proyecto fue desarrollado como parte de la Especialización en IoT (UBA), dentro de la asignatura Principios y Aplicaciones para dispositivos LoRa/LoRaWAN.
 
-🎯 Descripción general del proyecto
+🎯 Descripción general del proyecto:
+
 El proyecto implementa una solución de monitoreo de clima simulando un sistema IoT basado en tecnología LoRa/LoRaWAN, donde:
 
 Se generan datos simulados de sensores de temperatura y humedad, como si provinieran de dispositivos LoRa.
@@ -17,6 +18,7 @@ Los resultados son visualizados en tiempo real en el Dashboard de Node-RED.
 Toda la arquitectura es fácilmente desplegable mediante Docker.
 
 🧱 Tecnologías utilizadas
+
 Node-RED:
 Plataforma de desarrollo visual para orquestación de flujos IoT.
 
@@ -38,15 +40,14 @@ docker-compose.yml → Despliegue automatizado de todo el sistema.
 
 flujos-node-red.json → Exportación completa de los flujos de Node-RED para simulado y API.
 
-🚀 Instrucciones de despliegue
+🚀 Instrucciones de despliegue:
+
 1️⃣ Clonar el repositorio:
 
 git clone https://github.com/TU_USUARIO/iot-ttn-node-red.git
 cd iot-ttn-node-red
 
 2️⃣ Crear la base de datos y usuario MySQL manualmente
-
-Antes de iniciar los contenedores, asegúrese de crear la base de datos y el usuario con las siguientes credenciales:
 
 Nombre de la base de datos: lorawan_data
 Usuario: iotuser
@@ -69,7 +70,6 @@ CREATE TABLE sensor_data (
   humidity INT,
   timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-⚠ Nota: En algunos casos si se inicia MySQL directamente por Docker, la creación de usuario, base de datos y tabla se puede automatizar con variables de entorno o scripts adicionales.
 
 3️⃣ Levantar los contenedores con Docker
 
